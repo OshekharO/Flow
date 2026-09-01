@@ -68,6 +68,12 @@ class SearchPagingSource(
 ) : PagingSource<Page, SearchResultItem>() {
     companion object {
         private const val TAG = "SearchPagingSource"
+        private val VIDEO_ID_PATTERNS =
+            listOf(
+                "v=([A-Za-z0-9_-]{11})".toRegex(),
+                "youtu\\.be/([A-Za-z0-9_-]{11})".toRegex(),
+                "shorts/([A-Za-z0-9_-]{11})".toRegex(),
+            )
     }
 
     private val service = ServiceList.YouTube
@@ -382,13 +388,7 @@ class SearchPagingSource(
             }.distinctByNonBlankKey(Video::id)
 
     private fun extractVideoId(url: String): String {
-        val patterns =
-            listOf(
-                "v=([A-Za-z0-9_-]{11})".toRegex(),
-                "youtu\\.be/([A-Za-z0-9_-]{11})".toRegex(),
-                "shorts/([A-Za-z0-9_-]{11})".toRegex(),
-            )
-        for (pat in patterns) {
+        for (pat in VIDEO_ID_PATTERNS) {
             val m = pat.find(url) ?: continue
             return m.groupValues[1]
         }
