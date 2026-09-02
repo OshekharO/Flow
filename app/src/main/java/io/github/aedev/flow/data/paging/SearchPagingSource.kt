@@ -74,6 +74,14 @@ class SearchPagingSource(
                 "youtu\\.be/([A-Za-z0-9_-]{11})".toRegex(),
                 "shorts/([A-Za-z0-9_-]{11})".toRegex(),
             )
+
+        internal fun extractVideoId(url: String): String {
+            for (pat in VIDEO_ID_PATTERNS) {
+                val m = pat.find(url) ?: continue
+                return m.groupValues[1]
+            }
+            return url.substringAfterLast("/").substringBefore("?").take(11)
+        }
     }
 
     private val service = ServiceList.YouTube
@@ -386,14 +394,6 @@ class SearchPagingSource(
                     isShort = true,
                 )
             }.distinctByNonBlankKey(Video::id)
-
-    private fun extractVideoId(url: String): String {
-        for (pat in VIDEO_ID_PATTERNS) {
-            val m = pat.find(url) ?: continue
-            return m.groupValues[1]
-        }
-        return url.substringAfterLast("/").substringBefore("?").take(11)
-    }
 
     private fun extractChannelId(url: String): String =
         url
