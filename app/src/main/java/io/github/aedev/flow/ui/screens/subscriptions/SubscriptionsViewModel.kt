@@ -69,7 +69,7 @@ class SubscriptionsViewModel
         private var latestFeedVideos: List<Video> = emptyList()
         private var watchedVideoIds: Set<String> = emptySet()
         private var unplayableVideoIds: Set<String> = emptySet()
-        private var excludedShortsChannelIds: Set<String> = emptySet()
+        private var excludedShortsChannelIds: Set<String> = HashSet()
         private val durationEnrichmentAttemptedAt = mutableMapOf<String, Long>()
         private var durationEnrichmentJob: Job? = null
         private var visibleVideoIds: Set<String> = emptySet()
